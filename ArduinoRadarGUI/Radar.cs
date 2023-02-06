@@ -3,17 +3,15 @@
 public class Radar
 {
     private readonly Pen _pen;
-    private readonly Brush _targetBrush;
     private int _direction;
     private Angle _angle;
-    public int _radius;
+    private int _radius;
     private Point _radarOriginPoint;
     private IDictionary<Point, RadarTarget> _targets;
 
     public Radar()
     {
         _pen = new Pen(Color.Green, 3);
-        _targetBrush = Brushes.Red;
         _targets = new Dictionary<Point, RadarTarget>();
         _angle = new Angle(0);
     }
@@ -72,7 +70,7 @@ public class Radar
                 _targets.Remove(target.Position);
                 continue;
             }
-            gfx.FillEllipse(_targetBrush, target.Position.X, target.Position.Y, 10, 10);
+            target.Draw(gfx);
         }
     }
 
@@ -113,6 +111,7 @@ public class Radar
     {
         int x = _radarOriginPoint.X + (int)(distance * Math.Cos(angle.Radians));
         int y = _radarOriginPoint.Y + (int)(distance * Math.Sin(angle.Radians));
+
         return new Point(x, y);
     }
 }
