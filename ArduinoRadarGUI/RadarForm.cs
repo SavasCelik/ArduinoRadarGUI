@@ -4,7 +4,7 @@ namespace ArduinoRadarGUI;
 
 public partial class RadarForm : Form
 {
-    private Timer _timer;
+    private readonly Timer _timer;
     private readonly Radar _radar;
 
     public RadarForm()
