@@ -23,7 +23,7 @@ public partial class RadarForm : Form
 
     private void Timer_Tick(object? sender, EventArgs e)
     {
-        //_radar.Update();
+        _radar.Update();
         Refresh();
     }
 

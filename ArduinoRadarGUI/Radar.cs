@@ -5,7 +5,8 @@ public class Radar
     private readonly Pen _pen;
     private readonly Brush _targetBrush;
     private int _direction;
-    public int _angle;
+    private int _angleInDegrees;
+    private double _angleInRadians;
     private int _radius;
     private Point _radarOriginPoint;
     private IDictionary<Point, RadarTarget> _targets;
@@ -17,14 +18,20 @@ public class Radar
         _targets = new Dictionary<Point, RadarTarget>();
     }
 
-    public void AddTarget(int targetAngle, int targetDistance)
+    public void AddTarget(int targetRawAngle, int targetDistance)
     {
-        var mappedAngle = AngleMapper.MapAngle(targetAngle);
-        int x = _radarOriginPoint.X + (int)(targetDistance * Math.Cos(mappedAngle * Math.PI / 180));
-        int y = _radarOriginPoint.Y + (int)(targetDistance * Math.Sin(mappedAngle * Math.PI / 180));
+        var targetAngleInDegrees = AngleHelper.MapAngle(targetRawAngle);
+        var targetAngleInRadians = AngleHelper.DegreesToRadians(targetAngleInDegrees);
+
+        int x = _radarOriginPoint.X + (int)(targetDistance * Math.Cos(targetAngleInRadians));
+        int y = _radarOriginPoint.Y + (int)(targetDistance * Math.Sin(targetAngleInRadians));
         var position = new Point(x, y);
 
-        if (!_targets.ContainsKey(position))
+        if (_targets.TryGetValue(position, out var foundTarget))
+        {
+            foundTarget.ResetDeathTime();
+        }
+        else
         {
             var radarTarget = new RadarTarget(position);
             _targets.Add(position, radarTarget);
@@ -33,23 +40,24 @@ public class Radar
 
     public void Update()
     {
-        if (_angle <= -180)
+        if (_angleInDegrees <= -180)
         {
-            _angle = -180;
+            _angleInDegrees = -180;
             _direction = 3;
         }
-        else if (_angle >= 0)
+        else if (_angleInDegrees >= 0)
         {
-            _angle = 0;
+            _angleInDegrees = 0;
             _direction = -3;
         }
 
-        _angle += _direction;
+        var deltaAngle = _angleInDegrees + _direction;
+        SetAngle(deltaAngle);
     }
 
-    public void Update(int angle)
+    public void Update(int angleInDegrees)
     {
-        _angle = angle;
+        SetAngle(angleInDegrees);
     }
 
     public void Draw(Graphics gfx, Size clientSize)
@@ -101,8 +109,14 @@ public class Radar
 
     private void DrawScanLine(Graphics gfx)
     {
-        int x = _radarOriginPoint.X + (int)(_radius * Math.Cos(_angle * Math.PI / 180));
-        int y = _radarOriginPoint.Y + (int)(_radius * Math.Sin(_angle * Math.PI / 180));
+        int x = _radarOriginPoint.X + (int)(_radius * Math.Cos(_angleInRadians));
+        int y = _radarOriginPoint.Y + (int)(_radius * Math.Sin(_angleInRadians));
         gfx.DrawLine(_pen, _radarOriginPoint.X, _radarOriginPoint.Y, x, y);
+    }
+
+    private void SetAngle(int angleInDegrees)
+    {
+        _angleInDegrees= angleInDegrees;
+        _angleInRadians = AngleHelper.DegreesToRadians(_angleInDegrees);
     }
 }

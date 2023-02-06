@@ -2,15 +2,16 @@
 
 public class RadarTarget
 {
-	private readonly TimeSpan _lifeSpan = TimeSpan.FromSeconds(2);
-    public DateTime DiscoveryDate { get; init; }
+	private readonly TimeSpan _lifeSpan = TimeSpan.FromSeconds(1);
+	private DateTime _discoveryDate;
 	public Point Position { get; init; }
 
 	public RadarTarget(Point position)
 	{
-		DiscoveryDate= DateTime.Now;
+        _discoveryDate = DateTime.Now;
         Position = position;
 	}
 
-	public bool IsDead() => (DateTime.Now - DiscoveryDate) > _lifeSpan;
+	public void ResetDeathTime() => _discoveryDate = DateTime.Now;
+	public bool IsDead() => (DateTime.Now - _discoveryDate) > _lifeSpan;
 }
