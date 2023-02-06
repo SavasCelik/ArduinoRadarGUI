@@ -1,23 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ArduinoRadarGUI;
+﻿namespace ArduinoRadarGUI;
 
 public class Radar
 {
     private readonly Pen _pen;
+    private readonly Brush _targetBrush;
     private int _direction;
-    private int _angle;
+    public int _angle;
     private int _radius;
     private Point _radarOriginPoint;
+    private IDictionary<Point, RadarTarget> _targets;
 
     public Radar()
     {
         _pen = new Pen(Color.Green, 3);
+        _targetBrush = Brushes.Red;
+        _targets = new Dictionary<Point, RadarTarget>();
+    }
+
+    public void AddTarget(int targetAngle, int targetDistance)
+    {
+        var mappedAngle = AngleMapper.MapAngle(targetAngle);
+        int x = _radarOriginPoint.X + (int)(targetDistance * Math.Cos(mappedAngle * Math.PI / 180));
+        int y = _radarOriginPoint.Y + (int)(targetDistance * Math.Sin(mappedAngle * Math.PI / 180));
+        var position = new Point(x, y);
+
+        if (!_targets.ContainsKey(position))
+        {
+            var radarTarget = new RadarTarget(position);
+            _targets.Add(position, radarTarget);
+        }
     }
 
     public void Update()
@@ -36,6 +47,11 @@ public class Radar
         _angle += _direction;
     }
 
+    public void Update(int angle)
+    {
+        _angle = angle;
+    }
+
     public void Draw(Graphics gfx, Size clientSize)
     {
         DetermineRadarSize(clientSize);
@@ -44,6 +60,16 @@ public class Radar
         DrawInnerArc(gfx);
         DrawBottomLine(gfx);
         DrawScanLine(gfx);
+
+        foreach (var target in _targets.Values)
+        {
+            if (target.IsDead())
+            {
+                _targets.Remove(target.Position);
+                continue;
+            }
+            gfx.FillEllipse(_targetBrush, target.Position.X, target.Position.Y, 10, 10);
+        }
     }
 
     private void DetermineRadarSize(Size clientSize)

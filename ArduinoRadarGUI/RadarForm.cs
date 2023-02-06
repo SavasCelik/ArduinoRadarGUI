@@ -23,7 +23,7 @@ public partial class RadarForm : Form
 
     private void Timer_Tick(object? sender, EventArgs e)
     {
-        _radar.Update();
+        //_radar.Update();
         Refresh();
     }
 
@@ -31,5 +31,10 @@ public partial class RadarForm : Form
     {
         base.OnPaint(e);
         _radar.Draw(e.Graphics, ClientSize);
+    }
+
+    private void RadarForm_KeyPress(object sender, KeyPressEventArgs e)
+    {
+        _radar.AddTarget(45, 50);
     }
 }
