@@ -2,16 +2,17 @@
 
 namespace ArduinoRadarGUI;
 
-public class RemoteControllHandler
+public class SerialPortHandler
 {
     private readonly Radar _radar;
     private readonly SerialPort _serialPort;
 
-    public RemoteControllHandler(Radar radar)
+    public SerialPortHandler(Radar radar)
     {
         _radar = radar;
         _serialPort = new SerialPort("COM6", 9600);
         _serialPort.DataReceived += new SerialDataReceivedEventHandler(OnDataReceived);
+        _serialPort.Open();
     }
 
     public void OnDataReceived(object sender, SerialDataReceivedEventArgs e)
@@ -22,15 +23,5 @@ public class RemoteControllHandler
         {
             _radar.Update(-servoAngleInDegree);
         }
-    }
-
-    public void Start()
-    {
-        _serialPort.Open();
-    }
-
-    public void Stop()
-    {
-        _serialPort.Close();
     }
 }
