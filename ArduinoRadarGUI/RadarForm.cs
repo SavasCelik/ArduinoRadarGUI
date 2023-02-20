@@ -36,7 +36,7 @@ public partial class RadarForm : Form
     private void RadarForm_KeyPress(object sender, KeyPressEventArgs e)
     {
         var distanz = 50 * _radar.Radius / 100;
-        var angleInDegrees = new Angle(360 - 45);
+        var angleInDegrees = new Angle(360 - 50);
         _radar.AddTarget(angleInDegrees, distanz);
     }
 }
