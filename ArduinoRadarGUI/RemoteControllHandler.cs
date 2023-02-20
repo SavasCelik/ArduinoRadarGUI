@@ -1,24 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO.Ports;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO.Ports;
 
-namespace ArduinoRadarGUI
+namespace ArduinoRadarGUI;
+
+public class RemoteControllHandler
 {
-    public class RemoteControllHandler
+    private readonly Radar _radar;
+    private readonly SerialPort _serialPort;
+
+    public RemoteControllHandler(Radar radar)
     {
-        private readonly Radar _radar;
+        _radar = radar;
+        _serialPort = new SerialPort("COM6", 9600);
+        _serialPort.DataReceived += new SerialDataReceivedEventHandler(OnDataReceived);
+    }
 
-        public RemoteControllHandler(Radar radar)
-        {
-            _radar = radar;
-        }
+    public void OnDataReceived(object sender, SerialDataReceivedEventArgs e)
+    {
+        var message = _serialPort.ReadLine();
+        Console.WriteLine(message);
+    }
 
-        public void OnDataReceived(object sender, SerialDataReceivedEventArgs e)
-        {
-            Console.WriteLine("");
-        }
+    public void Start()
+    {
+        _serialPort.Open();
+    }
+
+    public void Stop()
+    {
+        _serialPort.Close();
     }
 }

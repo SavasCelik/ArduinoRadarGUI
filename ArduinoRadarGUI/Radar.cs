@@ -18,6 +18,8 @@ public class Radar
         _font = new Font(FontFamily.GenericSerif, 10);
         _targets = new Dictionary<Point, RadarTarget>();
         _angle = new Angle(0);
+        var rhandler = new RemoteControllHandler(this);
+        rhandler.Start();
     }
 
     public void AddTarget(Angle angle, int targetDistance)
