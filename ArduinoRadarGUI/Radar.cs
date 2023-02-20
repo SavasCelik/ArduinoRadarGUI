@@ -52,8 +52,8 @@ public class Radar
             _direction = -3;
         }
 
-        var deltaAngle = angleInDegrees + _direction;
-        _angle.SetAngle(deltaAngle);
+        var deltaAngleInDegrees = angleInDegrees + _direction;
+        //Update(deltaAngleInDegrees);
     }
 
     public void Update(int angleInDegrees)

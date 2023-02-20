@@ -17,7 +17,11 @@ public class RemoteControllHandler
     public void OnDataReceived(object sender, SerialDataReceivedEventArgs e)
     {
         var message = _serialPort.ReadLine();
-        Console.WriteLine(message);
+
+        if (int.TryParse(message, out var servoAngleInDegree))
+        {
+            _radar.Update(-servoAngleInDegree);
+        }
     }
 
     public void Start()
