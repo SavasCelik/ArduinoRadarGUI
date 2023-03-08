@@ -23,9 +23,20 @@ public class SerialPortHandler
     {
         var message = _serialPort.ReadLine();
 
-        if (int.TryParse(message, out var servoAngleInDegree))
+        if (!string.IsNullOrWhiteSpace(message) && message.Contains(';'))
         {
-            _radar.Update(-servoAngleInDegree);
+            var messageSplite = message.Split(';');
+
+            if (int.TryParse(messageSplite[0], out var servoAngleInDegree))
+            {
+                _radar.Update(-servoAngleInDegree);
+            }
+
+            if (int.TryParse(messageSplite[1], out var targetDistance) && targetDistance > 0)
+            {
+                var mappedDistance = targetDistance  * _radar.Radius / 50;
+                _radar.AddTarget(mappedDistance);
+            }
         }
     }
 }

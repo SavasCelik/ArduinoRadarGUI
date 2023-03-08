@@ -27,9 +27,9 @@ public class Radar
         _rhandler.StartListening();
     }
 
-    public void AddTarget(Angle angle, int targetDistance)
+    public void AddTarget(int targetDistance)
     {
-        var position = WorldToScreen(angle, targetDistance);
+        var position = WorldToScreen(_angle, targetDistance);
 
         if (_targets.TryGetValue(position, out var foundTarget))
         {
@@ -100,14 +100,14 @@ public class Radar
     {
         var rect = new Rectangle(_radarOriginPoint.X - Radius, _radarOriginPoint.Y - Radius, Radius * 2, Radius * 2);
         gfx.DrawArc(_pen, rect, 180, 180);
-        gfx.DrawString("100cm", _font, _brush, _radarOriginPoint.X - 25, rect.Y - 25);
+        gfx.DrawString("50cm", _font, _brush, _radarOriginPoint.X - 25, rect.Y - 25);
     }
 
     private void DrawInnerArc(Graphics gfx)
     {
         var rect = new Rectangle(_radarOriginPoint.X - Radius / 2, _radarOriginPoint.Y - Radius / 2, Radius, Radius);
         gfx.DrawArc(_pen, rect, 180, 180);
-        gfx.DrawString("50cm", _font, _brush, _radarOriginPoint.X - 25, rect.Y - 25);
+        gfx.DrawString("25cm", _font, _brush, _radarOriginPoint.X - 25, rect.Y - 25);
     }
 
     private void DrawBottomLine(Graphics gfx)
