@@ -10,6 +10,7 @@ public class Radar
     private Angle _angle;
     private Point _radarOriginPoint;
     private IDictionary<Point, RadarTarget> _targets;
+    private SerialPortHandler _rhandler;
 
     public Radar()
     {
@@ -18,7 +19,12 @@ public class Radar
         _font = new Font(FontFamily.GenericSerif, 10);
         _targets = new Dictionary<Point, RadarTarget>();
         _angle = new Angle(0);
-        var rhandler = new SerialPortHandler(this);
+        _rhandler = new SerialPortHandler(this);
+    }
+
+    public void StartSerialPortListening()
+    {
+        _rhandler.StartListening();
     }
 
     public void AddTarget(Angle angle, int targetDistance)

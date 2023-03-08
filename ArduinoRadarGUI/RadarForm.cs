@@ -13,6 +13,7 @@ public partial class RadarForm : Form
         DoubleBuffered = true;
         BackColor = Color.Black;
         _radar = new Radar();
+        _radar.StartSerialPortListening();
 
         // Set up the timer for update
         _timer = new Timer();

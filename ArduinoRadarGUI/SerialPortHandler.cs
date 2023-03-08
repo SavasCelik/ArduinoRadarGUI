@@ -12,6 +12,10 @@ public class SerialPortHandler
         _radar = radar;
         _serialPort = new SerialPort("COM6", 9600);
         _serialPort.DataReceived += new SerialDataReceivedEventHandler(OnDataReceived);
+    }
+
+    public void StartListening()
+    {
         _serialPort.Open();
     }
 
