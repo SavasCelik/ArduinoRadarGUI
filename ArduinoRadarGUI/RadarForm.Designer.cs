@@ -36,7 +36,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Name = "RadarForm";
-            this.Text = "Form1";
+            this.Text = "Arduino Radar";
             this.ResumeLayout(false);
 
         }
