@@ -16,15 +16,16 @@ public partial class RadarForm : Form
         _radar.StartSerialPortListening();
 
         // Set up the timer for update
-        _timer = new Timer();
-        _timer.Interval = 20;
+        _timer = new Timer
+        {
+            Interval = 20
+        };
         _timer.Tick += Timer_Tick;
         _timer.Start();
     }
 
     private void Timer_Tick(object? sender, EventArgs e)
     {
-        _radar.Update();
         Refresh();
     }
 

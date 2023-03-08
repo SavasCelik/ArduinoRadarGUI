@@ -6,7 +6,6 @@ public class Radar
     private readonly Pen _pen;
     private readonly Brush _brush;
     private readonly Font _font;
-    private int _direction;
     private Angle _angle;
     private Point _radarOriginPoint;
     private IDictionary<Point, RadarTarget> _targets;
@@ -40,25 +39,6 @@ public class Radar
             var newTarget = new RadarTarget(position);
             _targets.Add(position, newTarget);
         }
-    }
-
-    public void Update()
-    {
-        var angleInDegrees = _angle.Degrees;
-
-        if (angleInDegrees <= -180)
-        {
-            angleInDegrees = -180;
-            _direction = 3;
-        }
-        else if (angleInDegrees >= 0)
-        {
-            angleInDegrees = 0;
-            _direction = -3;
-        }
-
-        var deltaAngleInDegrees = angleInDegrees + _direction;
-        //Update(deltaAngleInDegrees);
     }
 
     public void Update(int angleInDegrees)
