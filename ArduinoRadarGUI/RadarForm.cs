@@ -33,11 +33,4 @@ public partial class RadarForm : Form
         base.OnPaint(e);
         _radar.Draw(e.Graphics, ClientSize);
     }
-
-    private void RadarForm_KeyPress(object sender, KeyPressEventArgs e)
-    {
-        var distanz = 50 * _radar.Radius / 100;
-        var angleInDegrees = new Angle(360 - 45);
-        _radar.AddTarget(angleInDegrees, distanz);
-    }
 }
