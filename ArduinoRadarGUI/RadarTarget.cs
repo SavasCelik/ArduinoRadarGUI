@@ -16,9 +16,5 @@ public class RadarTarget
 
 	public void ResetDeathTime() => _discoveryDate = DateTime.Now;
 	public bool IsDead() => (DateTime.Now - _discoveryDate) > _lifeSpan;
-
-	public void Draw(Graphics gfx)
-	{
-        gfx.FillEllipse(_targetBrush, Position.X, Position.Y, _size, _size);
-    }
+	public void Draw(Graphics gfx) => gfx.FillEllipse(_targetBrush, Position.X, Position.Y, _size, _size);
 }

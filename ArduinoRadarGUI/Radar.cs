@@ -2,6 +2,7 @@
 
 public class Radar
 {
+    public int MaxDistance { get; init; }
     public int Radius { get; private set; }
     private readonly Pen _pen;
     private readonly Brush _brush;
@@ -9,7 +10,7 @@ public class Radar
     private Angle _angle;
     private Point _radarOriginPoint;
     private IDictionary<Point, RadarTarget> _targets;
-    private SerialPortHandler _rhandler;
+    private SerialPortHandler _serialPortHandler;
 
     public Radar()
     {
@@ -18,12 +19,13 @@ public class Radar
         _font = new Font(FontFamily.GenericSerif, 10);
         _targets = new Dictionary<Point, RadarTarget>();
         _angle = new Angle(0);
-        _rhandler = new SerialPortHandler(this);
+        _serialPortHandler = new SerialPortHandler(this);
+        MaxDistance = 50;
     }
 
     public void StartSerialPortListening()
     {
-        _rhandler.StartListening();
+        _serialPortHandler.StartListening();
     }
 
     public void AddTarget(int targetDistance)
@@ -44,6 +46,11 @@ public class Radar
     public void Update(int angleInDegrees)
     {
         _angle.SetAngle(angleInDegrees);
+
+        foreach (var target in _targets.Values.Where(x => x.IsDead()))
+        {
+            _targets.Remove(target.Position);
+        }
     }
 
     public void Draw(Graphics gfx, Size clientSize)
@@ -57,11 +64,6 @@ public class Radar
 
         foreach (var target in _targets.Values)
         {
-            if (target.IsDead())
-            {
-                _targets.Remove(target.Position);
-                continue;
-            }
             target.Draw(gfx);
         }
     }
@@ -80,14 +82,14 @@ public class Radar
     {
         var rect = new Rectangle(_radarOriginPoint.X - Radius, _radarOriginPoint.Y - Radius, Radius * 2, Radius * 2);
         gfx.DrawArc(_pen, rect, 180, 180);
-        gfx.DrawString("50cm", _font, _brush, _radarOriginPoint.X - 25, rect.Y - 25);
+        gfx.DrawString(MaxDistance + "cm", _font, _brush, _radarOriginPoint.X - 25, rect.Y - 25);
     }
 
     private void DrawInnerArc(Graphics gfx)
     {
         var rect = new Rectangle(_radarOriginPoint.X - Radius / 2, _radarOriginPoint.Y - Radius / 2, Radius, Radius);
         gfx.DrawArc(_pen, rect, 180, 180);
-        gfx.DrawString("25cm", _font, _brush, _radarOriginPoint.X - 25, rect.Y - 25);
+        gfx.DrawString((MaxDistance / 2) + "cm", _font, _brush, _radarOriginPoint.X - 25, rect.Y - 25);
     }
 
     private void DrawBottomLine(Graphics gfx)
@@ -103,9 +105,11 @@ public class Radar
 
     private Point WorldToScreen(Angle angle, int distance)
     {
-        int x = _radarOriginPoint.X + (int)(distance * Math.Cos(angle.Radians));
-        int y = _radarOriginPoint.Y + (int)(distance * Math.Sin(angle.Radians));
+        var zX = (int)(distance * Math.Cos(angle.Radians));
+        var zY = (int)(distance * Math.Sin(angle.Radians));
+        var dX = _radarOriginPoint.X + zX;
+        var dY = _radarOriginPoint.Y + zY;
 
-        return new Point(x, y);
+        return new Point(dX, dY);
     }
 }

@@ -19,22 +19,22 @@ public class SerialPortHandler
         _serialPort.Open();
     }
 
-    public void OnDataReceived(object sender, SerialDataReceivedEventArgs e)
+    private void OnDataReceived(object sender, SerialDataReceivedEventArgs e)
     {
         var message = _serialPort.ReadLine();
 
         if (!string.IsNullOrWhiteSpace(message) && message.Contains(';'))
         {
-            var messageSplite = message.Split(';');
+            var messageSplit = message.Split(';');
 
-            if (int.TryParse(messageSplite[0], out var servoAngleInDegree))
+            if (int.TryParse(messageSplit[0], out var servoAngleInDegree))
             {
                 _radar.Update(-servoAngleInDegree);
             }
 
-            if (int.TryParse(messageSplite[1], out var targetDistance) && targetDistance > 0)
+            if (int.TryParse(messageSplit[1], out var targetDistance) && targetDistance > 0)
             {
-                var mappedDistance = targetDistance  * _radar.Radius / 50;
+                var mappedDistance = targetDistance * _radar.Radius / _radar.MaxDistance;
                 _radar.AddTarget(mappedDistance);
             }
         }
