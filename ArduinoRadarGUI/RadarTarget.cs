@@ -14,7 +14,18 @@ public class RadarTarget
         Position = position;
 	}
 
+	/// <summary>
+	/// Resets the death time
+	/// </summary>
 	public void ResetDeathTime() => _discoveryDate = DateTime.Now;
+
+	/// <summary>
+	/// Returns whether or not the target is dead
+	/// </summary>
 	public bool IsDead() => (DateTime.Now - _discoveryDate) > _lifeSpan;
+
+	/// <summary>
+	/// Draws the radar target
+	/// </summary>
 	public void Draw(Graphics gfx) => gfx.FillEllipse(_targetBrush, Position.X, Position.Y, _size, _size);
 }

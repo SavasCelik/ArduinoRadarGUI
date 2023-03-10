@@ -10,6 +10,9 @@ public class Angle
         SetAngle(angleInDegrees);
     }
 
+    /// <summary>
+    /// Sets the angle
+    /// </summary>
     public void SetAngle(int angleInDegrees)
     {
         Degrees = angleInDegrees;

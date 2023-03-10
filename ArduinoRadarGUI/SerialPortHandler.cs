@@ -14,11 +14,17 @@ public class SerialPortHandler
         _serialPort.DataReceived += new SerialDataReceivedEventHandler(OnDataReceived);
     }
 
+    /// <summary>
+    /// Starts listening to the SerialPort messages
+    /// </summary>
     public void StartListening()
     {
         _serialPort.Open();
     }
 
+    /// <summary>
+    /// Parses the received message from the SerialPort and informs the radar
+    /// </summary>
     private void OnDataReceived(object sender, SerialDataReceivedEventArgs e)
     {
         var message = _serialPort.ReadLine();
